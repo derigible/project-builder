@@ -23,7 +23,9 @@ Each module will define the conventions used in the __init__.py file. Also in th
 two methods: run_convention_checks() and build(). If run_convention_checks() has not been run, then build() should raise
 and error (or run_convention_checks()).
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 HOW TO USE
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Each module should define a public interface for other projects to build their projects. Inside of the __init__.py should
 be a function (i.e. register()) that is called to store the location of any inheriting classes. An example of this is as follows:
@@ -49,7 +51,9 @@ Note that this is specific to template2html; check each modules __init__.py doc 
 
 Now that you have done those steps, use build_project.py /path/to/build.py -r build. To run the convention checks, use build_project.py /path/to/build.py -r convention_check.
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PROJECT CONFIGURATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 As ironic as it is that project builder depends on a configuration file despite its insistence on convention, configuration
 makes things a lot easier when not many configurations are needed. That being said, the build.py file can actually be
@@ -64,7 +68,9 @@ BUILD = (".../templates",)
 
 That's it. Plug away and enjoy the builder do its stuff.
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 CUSTOMIZATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The builder module will not allow a build to complete if the aforementioned conventions are not met. However, it is possible
 to build one aspect of the builder without wasting time on the others. For example, you want to build and run the testsuite
@@ -97,3 +103,10 @@ MODULES = (("template2html"), ("othermodule", "/absolute/path/to/othermodule"))
 
 The path must be absolute. In later versions this will likely just search the python path (and so must be an importable
 module on the pythonpath, but I don't want to worry about that right now).
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ENFORCING AND CREATING DOCUMENTATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The module pydocs is used to create the documentation. It is encouraged when creating a builder module to start
+all module level docstrings with the __doc__ attribute. All other docstrings should follow the instructions given in the
+pydocs help page (https://docs.python.org/3.4/library/pydoc.html#module-pydoc).

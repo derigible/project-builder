@@ -6,6 +6,8 @@ Created on Feb 8, 2015
 from argparse import ArgumentParser
 import os, sys
 
+TESTS = []
+
 #taken from django unit tests as an example, need to modify
 
 if __name__ == "__main__":

@@ -28,7 +28,8 @@ HOW TO USE
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Each module should define a public interface for other projects to build their projects. Inside of the __init__.py should
-be a function (i.e. register()) that is called to store the location of any inheriting classes. An example of this is as follows:
+be a function called register() that is called to store the location of any inheriting classes. This function will return
+a tuple of all module files to be built. An example of this is as follows:
 
 Say that you have an html project that you want to build using the template2html module. You could create a project structure
 as follows:
@@ -50,6 +51,24 @@ Inside each file you will do the following:
 Note that this is specific to template2html; check each modules __init__.py doc for how to register a file.
 
 Now that you have done those steps, use build_project.py /path/to/build.py -r build. To run the convention checks, use build_project.py /path/to/build.py -r convention_check.
+
+To demonstrate how the build.py works using the above example, let's say that templates is part of a web project and is a directory
+inside of that project as follows:
+
+	-web_project
+		|
+		 - templates
+		 
+The build.py will be at the root of this project:
+
+	-web_project
+		|
+		 - templates
+		 - ...(other modules)
+		 - build.py
+		 
+By pointing build_project.py to the this build.py, you will be able to run the build for each of the different projects
+inside your main project.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PROJECT CONFIGURATION

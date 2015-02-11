@@ -19,10 +19,6 @@ class BaseTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def assertIsInstance(self, obj, cls):
-        super(BaseTest, self).assertIsInstance(obj, cls,
-            "Object {!r} is not equal to class {!r}.".format(obj, cls))
         
     def _get_random_file(self, path):
         '''

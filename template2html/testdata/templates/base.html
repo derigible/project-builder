@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>{% block title %}Wilkins{% endblock title %}</title>
+		<link href="https://edge.fscdn.org/assets/docs/fs_logo_favicon.ico" rel="icon" type="image/x-icon" />
+		{% block css %}
+<!-- 		<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<!-- 		<link href='https://edge.fscdn.org/assets/css/responsive-166fbb8fd4a3f5207a500bdf6c2d9186.css' rel='stylesheet' media='screen'>  -->
+		<link href='/static/css/responsive-166fbb8fd4a3f5207a500bdf6c2d9186.css' rel='stylesheet' media='screen'> 
+<!-- 		<link href='https://edge.fscdn.org/assets/css/layout/theme-engage-8e8aed919ce18a2f4b2a470bfc58b928.css' rel='stylesheet' media='screen'> -->
+		<link href='/static/css/theme-engage-8e8aed919ce18a2f4b2a470bfc58b928.css' rel='stylesheet' media='screen'>
+		<style type="text/css">	
+			#global-engage-header {padding-top: 25px;}
+			h1 {
+				padding-top: .5em;
+				padding-bottom: 0;
+				margin-bottom: 0;
+			}
+			h2 {
+				font-size: 1.5em;
+				padding-bottom: 0;
+				margin-bottom: 0;
+			}
+		</style>
+		{% endblock css %}
+	</head>
+	<body ng-app={% block angapp %}"Wilkins"{% endblock angapp %}>
+		<div id="wrapper" class="container">
+			{% block mainheader %}
+			<header class="clearfix" id="global-engage-header">
+				<div class="global-pri-nav-container clearfix">
+					<div class="logo-container pull-left">
+						<a class="logo" href="/"><!-- FamilySearch --></a>
+					</div>
+					<div>
+						<h1 class="serif text-center">{% block headertitle %}Wilkins{% endblock headertitle %}</h1>
+						{% block subtitle %}{% endblock subtitle %}
+					</div>
+				</div>
+				{% block login %}
+				<div class="pull-right">
+					{% if user.is_authenticated %}
+					    Logged in as {{ user.username | upper}}. <a href="{% url 'logout' %}">Logout</a>
+					{% else %}
+					    <a href="{% url 'login' %}">Log in here</a>
+					{% endif %}
+				</div>
+				{% endblock login %}
+			</header> 
+			{% endblock mainheader %}
+			<div id="main">
+				{% block mainbody %}
+				<a href="/wilkins/timer/timers/">See All Timers in System</a>
+				<div ng-controller="ProjectAccordianCtrl">
+					<div accordion close-others="false">
+						<div accordion-group ng-repeat="project in projects | orderBy:'name'" is-open="isProjectOpen" class="">
+							<div accordion-heading ng-init="$watch('isProjectOpen', watchProjectIsOpen)">
+								<h4>{[{project.name}]} <span ng-class="isProjectOpen && 'icon-chevron-up' || 'icon-chevron-down'"></span></h4>
+							</div>
+							<a href="/wilkins/project/{[{project.id}]}/">&gt;&gt; All Workloads</a>
+							<div accordion-group ng-repeat="workload in workloads | orderBy:'name'" is-open="isWorkloadOpen">
+								<div accordion-heading ng-init="$watch('isWorkloadOpen', watchIsOpen)">
+									<h5>{[{workload.name}]} <span ng-class="{'icon-chevron-down':!isWorkloadOpen, 'icon-chevron-up':isWorkloadOpen}"></span></h5>
+								</div>
+									<!--   <span workload-timepopover popover-html="<a ng-include='prohect.html' href>Some Popover Text</a><b>Hello World<b>" popover-placement="bottom" popover-label="Label"></span> -->
+								<a href="/wilkins/workloads/{[{workload.id}]}/">&gt;&gt; All Runs</a> <br/>
+								<a href="/wilkins/workload/{[{workload.id}]}/latest/">&gt;&gt; Latest Run</a> <br/>
+								<a href="/wilkins/compare/workload/{[{workload.id}]}/workload_run/latest/workload_run/previous/">&gt;&gt; Latest vs Previous Comparison</a> <br/>
+								<a href="/wilkins/create/workload/{[{workload.id}]}/workload_view/">&gt;&gt; Create View</a><br />
+								<a href="/wilkins/compare/workload/{[{workload.id}]}/create/">&gt;&gt; Compare Runs</a><br />
+								Showing previous 15 runs. Click on "All Runs" to see before this date.
+								<div accordion-group ng-repeat="workload_run in workload.runs | orderBy: '-date'" is-open="isViewOpen">
+									<div accordion-heading ng-init="$watch('isViewOpen', watchIsViewOpen)">
+										<h5>{[{workload_run.datestring}]}<span ng-class="{'icon-chevron-down':!isViewOpen, 'icon-chevron-up':isViewOpen}"></span></h5>
+									</div>
+										<div ng-if="multiDefault" accordion-group is-open="isDefaultViewOpen">
+											<div accordion-heading ng-init="$watch('isDefaultViewOpen', isDefaultViewOpen)">
+												<h5>Default<span ng-class="{'icon-chevron-down':!isDefaultViewOpen, 'icon-chevron-up':isDefaultViewOpen}"></span></h5>
+											</div>
+											<ul class="unstyled">
+											<li ng-repeat="run_view in workload.default_views | orderBy:'name'" >
+												<a ng-href="/wilkins/workload_run/{[{workload_run.id}]}/workload_view/{[{run_view.id}]}/">{[{run_view.name}]}</a>
+												<a ng-href="/wilkins/create/workload_view/{[{run_view.id}]}/workload/{[{workload.id}]}/report/">  &gt;&gt; Create Report</a>
+												<a style="padding-left:1em;" href="/wilkins/workload/{[{workload.id}]}/workload_view/{[{run_view.id}]}/latest/">		&gt;&gt; Latest Run</a>
+												<a style="padding-left:1em;" href="/wilkins/compare/workload/{[{workload.id}]}/workload_run/latest/workload_run/previous/workload_view/{[{run_view.id}]}/">		&gt;&gt; Latest vs Previous Comparison</a>
+											</li>
+										</ul>	
+										</div>
+										<ul class="unstyled">
+											<li ng-repeat="run_view in workload.other_views">
+												<a ng-href="/wilkins/workload_run/{[{workload_run.id}]}/workload_view/{[{run_view.id}]}/">{[{run_view.name}]}</a>
+												<a ng-href="/wilkins/create/workload_view/{[{run_view.id}]}/workload/{[{workload.id}]}/report/">  &gt;&gt; Create Report</a>
+												<a style="padding-left:1em;" href="/wilkins/workload/{[{workload.id}]}/workload_view/{[{run_view.id}]}/latest/">		&gt;&gt; Latest Run</a>
+												<a style="padding-left:1em;" href="/wilkins/compare/workload/{[{workload.id}]}/workload_run/latest/workload_run/previous/workload_view/{[{run_view.id}]}/">		&gt;&gt; Latest vs Previous Comparison</a>
+											</li>
+										</ul>		
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endblock mainbody %}
+			</div><!-- #main -->
+		</div><!-- #wrapper.container -->
+		
+		{% block scripts %}
+<!-- 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.min.js"></script> -->
+		<script src="/static/js/angular.min.js"></script>
+<!-- 		<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script> -->
+		<script src="/static/js/ui-bootstrap-tpls-0.6.0.js"></script>
+		<script src="/static/js/wilkins.js"></script> 
+		{% endblock scripts %}
+	</body>
+</html>

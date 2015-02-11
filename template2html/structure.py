@@ -10,17 +10,24 @@ from utils import lazy_property
 class Template(object):
     '''
     This is the structure for a template. Templates are lazy, meaning they are not really created until evaluated. Once
-    evaluated, the Template becomes immutable.
+    evaluated, the Template becomes immutable. If there is an extends in the template, than the dependency is also evaluated.
     '''
-    path = None
+    html = None
     dependency = None
     template = None
+    path = None
     
 
-    def __init__(self, params):
+    def __init__(self, html, path):
         '''
-        Constructor
+        The constructor for the template object. Recieves a string of html and the path to the directory for the template.
+        
+        @param html: a string that represents the template in raw form
+        @param path: the path to the directory the template is found
         '''
+        self.html = html
+        self.path = path
+        
     @lazy_property
     def sections(self):    
         '''

@@ -25,34 +25,65 @@ The jinja templating is pretty straightforward, and you enter blocks of html in 
 
 template2html does the same thing, and any pages that inherit from another page with blocks defined can override the
 html inside the parent block by writing new (or nothing) into the block. Note that setting a block that has nest blocks
-to empty will usually clear all nested blocks as well. However, if you wish to keep nested blocks, do the following:
+to empty will clear all nested blocks as well. However, if you wish to keep nested blocks, do the following:
 
 {% block header keepnested %} {% endblock header %}
 
-This means that any blocks that have been defined inside the header will be kept, for better or for worse. If you want to 
+This means that any blocks that have been defined inside the header will be kept while clearing out the sibling html. If you want to 
 keep the main block and add some html while also changing a nested block, do the following:
 
 {% block header inherit%}
-
-''some more html code
-{% block childblock inherit %} ''some more html code  {% endblock childblock inherit %}
-
+    ''some more html code
+    {% block childblock inherit %} ''some more html code  {% endblock childblock %}
 {% endblock header %}
+
+or
+
+{% block header inherit%}
+    ''some more html code
+    {% block childblock %} ''some more html code  {% endblock childblock %}
+{% endblock header %}
+
+Where the first example will inherit the child block from the parent block, and the second redefines the child block. This
+will also keep all the nested blocks as they are.
+
+To add html before or after the inherited parent block, you can do the following:
+
+{% block header inherit%}
+    ''some html code
+    {parent}
+{% endblock header %}
+
+or
+
+{% block header inherit%}
+    {parent}
+    ''some html code
+{% endblock header %}
+
 
 Nested blocks can be overridden in children templates in two ways:
 
-{% block header keepnested %} {%block childblock %} {endblock childblock %} {% endblock header %}
+To change the childblocks and remove the html from the parent block:
+
+{% block header keepnested %} 
+    {%block childblock %} {endblock childblock %} 
+{% endblock header %}
 
 or, if you wish to only change the nest block and keep the parent block:
 
 {%block childblock %} {endblock childblock %}
 
-This will look for any block that has been called childblock and will change the first one found. If two or more blocks
-are defined under nested blocks, then do the following:
+or
 
-{% block header changenested %} {%block childblock %} {endblock childblock %} {% endblock header %}
+{% block header inherit %} 
+    {%block childblock %} {endblock childblock %} 
+{% endblock header %}
 
-Note that templates that inherit from another template cannot add html without surrounding it with a block.
+The first one will look for any block that has been called childblock and will change the first one found (note that having two blocks of the same name
+is a KeyError and will be treated as such). 
+
+Templates that inherit from another template cannot add html without surrounding it with a block.
 
 Adding blocks to a parent template will simply append the html to the bottom of the page unless the first parent block that should
 come after the new block is defined as well. template2html will keep track of the order of all blocks and in what order they
@@ -60,10 +91,16 @@ are added.
 
 Inheriting from a template is done as follows:
 
-{% extends "parent.html" %}
+{% extends parent.html %}
 
-The "parent.html" will only work if the template is in the same directory as the child. If it is not, you must use the
+The parent.html will only work if the template is in the same directory as the child. If it is not, you must use the
 absolute path to the template.
+
+Template Reserved Words
+
+These words can't be used inside of the block tags as names.
+
+parent
 
 ADDING LOGIC
 

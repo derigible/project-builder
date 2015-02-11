@@ -15,7 +15,7 @@ class lazy_property(object):
         self.fget = fget
         self.func_name = fget.__name__
 
-    def __get__(self,obj,cls):
+    def __get__(self, obj, cls):
         if obj is None:
             return None
         value = self.fget(obj)

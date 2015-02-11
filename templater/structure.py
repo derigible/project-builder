@@ -4,8 +4,8 @@ Created on Feb 8, 2015
 @author: derigible
 '''
 
-from collections import OrderedDict
 from utils import lazy_property
+import templater.parser as parser
 
 class Template(object):
     '''
@@ -14,7 +14,6 @@ class Template(object):
     '''
     html = None
     dependency = None
-    template = None
     path = None
     
 
@@ -34,16 +33,5 @@ class Template(object):
         Upon evaluation will create the sections attribute, which is an OrderedDict of the sections found in the template.
         It will then replace itself with the new ordereddict and all subsequent calls to this property will return that dict.
         '''
-        return self._evaluate_sections()
-    
-    def _evaluate_sections(self):
-        '''
-        Evaluates the template attribute and creates a section object. It then deletes the template attribute, thus
-        ensuring that Template becomes an immutable object. Calling this method after sections has been evaluated will
-        do nothing.
-        '''
-        if hasattr(self, "template"):
-            pass
-        else:
-            return
+        return parser.parse_html_template(self.html)
         

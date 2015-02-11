@@ -101,6 +101,27 @@ Template Reserved Words
 These words can't be used inside of the block tags as names.
 
 parent
+foot
+names cannot contain the {, } or % characters
+
+CSS tags
+
+Css uses the { and } characters to contain its code inside html. Also, some js libraries use the { } in combination
+with some other characters to denote a field. If your library does this, try to change the interpolation to {{ and }},
+or do the following:
+
+For CSS:
+
+enclose all css tags with the opening !css
+
+For js libraries:
+
+change the interpolation of your js library to {{ and }}, or start the enclose of your js calls with !js and set the templater
+interpolation variable to the opening field enclosing you wish.
+
+The reason that the opening enclosure character is the only character that matters is that the parser only looks for the
+{ character when opening and the % when closing a block. The characters next to these characters determine if it is a valid
+opening or closing block.
 
 ADDING LOGIC
 
@@ -140,3 +161,5 @@ from versioner import get_version
 VERSION = (0, 0, 0, 'alpha', 0)
 
 __version__ = get_version(VERSION)
+
+interpolation = '{{'

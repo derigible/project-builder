@@ -12,7 +12,7 @@ module.
 
 EXAMPLE:
 
-TESTS = ["template2html", "pythonpath.to.module"]
+TESTS = ["templater", "pythonpath.to.module"]
 
 You can also register tests in the build_project.py file under the TESTS list.
 '''
@@ -24,7 +24,7 @@ VERSION = (0, 0, 0, 'alpha', 0)
 
 __version__ = get_version(VERSION)
 
-TESTS = ["template2html"]
+TESTS = ["templater"]
 
 from build_project import TESTS as additional_tests
 

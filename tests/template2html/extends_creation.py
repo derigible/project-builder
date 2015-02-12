@@ -10,7 +10,7 @@ from templater.structure import Template
 from string import Template as stemp
 from templater.parser import approved_block_types
 
-class Template2HtmlTest(base):
+class TemplaterTest(base):
     '''
     Tests the functionality of the templater module.
     '''
@@ -253,4 +253,10 @@ class Template2HtmlTest(base):
         self.assertMultiLineEqual(template.sections["header"]["html"], "<link rel='author' title='Test' href='#'>{parent}{css}") #a template keeps track of the html in the parent by marking parent
         self.assertMultiLineEqual(template.dependency, "/template_test_single_section.html")   
             
-    
+    def test_section_creation_maintains_order(self):
+        html = '''{% extends $location/template_test_single_section.html %}
+        {% block header %}
+        {% endblock header %}'''
+        template = Template(html, self.working_templates)
+        self.assertEqual(3, len(template.sections))
+        self.assertListEqual(['parent', 'header', 'foot'], list(template.sections.keys()))

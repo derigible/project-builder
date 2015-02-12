@@ -237,5 +237,3 @@ class Template2HtmlTest(base):
         template = Template(html, self.working_templates)
         with self.assertRaises(KeyError):
             template.sections
-    
-    

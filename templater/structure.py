@@ -16,10 +16,9 @@ class Template(object):
     dependency = None
     path = None
     
-
     def __init__(self, html, path):
         '''
-        The constructor for the template object. Recieves a string of html and the path to the directory for the template.
+        The constructor for the template object. Receives a string of html and the path to the directory for the template.
         
         @param html: a string that represents the template in raw form
         @param path: the path to the directory the template is found
